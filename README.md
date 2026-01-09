@@ -1,4 +1,4 @@
-# <TBD> by 2Yellow2Brown
+# TBD by 2Yellow2Brown
 # Roster
 Aoanul Hoque (PM), Kalimul Kaif, Owen Zeng, Yuhang Pan
 # Description
