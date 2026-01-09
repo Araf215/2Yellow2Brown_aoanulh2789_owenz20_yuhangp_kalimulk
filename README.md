@@ -1,2 +1,10 @@
-# 2Yellow2Brown_aoanulh2789_owenz20_yuhangp_kalimulk
-p02
+# <TBD> by 2Yellow2Brown
+# Roster
+Aoanul Hoque (PM), Kalimul Kaif, Owen Zeng, Yuhang Pan
+# Description
+TBD
+# Install Guide
+WIP
+# Launch Codes
+WIP
+
