@@ -1,8 +1,8 @@
-# TBD by 2Yellow2Brown
+# 2Y2B TierList Creator by 2Yellow2Brown
 # Roster
 Aoanul Hoque (PM), Kalimul Kaif, Owen Zeng, Yuhang Pan
 # Description
-TBD
+Our website is a simplified tier list creator (inspired by tiermaker.com). Users cain sign up/login, create tier lists through an interactive editor, save them to their account, and view them later on a personal profile page. Other users can browse/search for tier lists and view creators’ profiles to see the tier lists they’ve made.
 # Install Guide
 To install our website, follow these instructions.
 
