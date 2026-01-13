@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!--
+    Aoanul Hoque (PM), Kalimul Kaif, Owen Zeng, Yuhang Pan
+    2Y2B TierList Creator by 2Yellow2Brown
+    SoftDev
+    P02: Makers Makin' It, Act I
+    Jan 2026
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    {% for tierlist in tierlists %}
+    <div class="tierlist">
+        <h5>{{ tl.title }}</h5>
+        <p>by {{ tl.creator_name }}</p>
+    </div>
+    {% endfor %}
+
+    <script src="static/js/app.js"></script>
+</body>
+</html>
