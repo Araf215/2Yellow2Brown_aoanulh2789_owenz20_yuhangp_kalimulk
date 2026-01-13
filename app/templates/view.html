@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tierlist.title }} - 2Y2B Tier List{% endblock %}
+
+{% block content %}
+<div class="tierlist-view">
+    <div class="header" style="margin-bottom: 2rem;">
+        <h1>{{ tierlist.title }}</h1>
+        <p class="subtitle" style="color: var(--text-muted);">Created by {{ tierlist.creator_name }} • Last updated {{
+            tierlist.last_update }}</p>
+        <p>{{ tierlist.description }}</p>
+    </div>
+
+    <div class="tiers-container" style="display: flex; flex-direction: column; gap: 1rem;">
+        {% for tier in tierlist.tiers %}
+        <div class="tier-row" style="display: flex; border: 1px solid var(--border-color); background-color: #000;">
+            <div class="tier-label" style="
+                width: 100px; 
+                min-height: 80px; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                text-align: center; 
+                padding: 0.5rem; 
+                font-weight: bold;
+                color: #000;
+                /* Assign random pastel colors or fixed colors based on tier name typically, but for now fixed or random inline logic simplified */
+                background-color: #ff7f7f; /* Placeholder color */
+            ">
+                {{ tier.name }}
+            </div>
+            <div class="tier-items"
+                style="flex: 1; padding: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; background-color: #1a1a1a;">
+                {% for item in tier.items %}
+                {% if item.image %}
+                <img src="{{ item.image }}" alt="{{ item.name }}" title="{{ item.name }}"
+                    style="width: 80px; height: 80px; object-fit: cover;">
+                {% else %}
+                <div class="tier-item-text" style="
+                        padding: 0.5rem 1rem; 
+                        background-color: #333; 
+                        color: #fff; 
+                        border-radius: 4px;
+                        display: flex;
+                        align-items: center;
+                    ">
+                    {{ item.name }}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Error - 2Y2B Tier List{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 4rem;">
+    <h1 style="font-size: 3rem; margin-bottom: 2rem;">Oops!</h1>
+    <p style="font-size: 1.5rem; color: var(--text-muted); margin-bottom: 2rem;">
+        {{ message or "Something went wrong." }}
+    </p>
+    <a href="{{ url_for('dashboard') }}" class="btn">Go Back Home</a>
+</div>
+{% endblock %}

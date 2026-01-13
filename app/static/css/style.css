@@ -1,0 +1,138 @@
+:root {
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --background-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-color: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: #334155;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.navbar {
+    background-color: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-brand a {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-weight: 400;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--text-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    min-height: 80vh;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: #020617;
+    color: var(--text-color);
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.error-msg {
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+h1, h2, h3 {
+    margin-top: 0;
+}
+
+.tierlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+    margin-top: 4rem;
+}

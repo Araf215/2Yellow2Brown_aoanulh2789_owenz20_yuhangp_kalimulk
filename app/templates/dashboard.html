@@ -1,25 +1,30 @@
-<!DOCTYPE html>
-<!--
-    Aoanul Hoque (PM), Kalimul Kaif, Owen Zeng, Yuhang Pan
-    2Y2B TierList Creator by 2Yellow2Brown
-    SoftDev
-    P02: Makers Makin' It, Act I
-    Jan 2026
--->
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-<body>
-    {% for tierlist in tierlists %}
-    <div class="tierlist">
-        <h5>{{ tl.title }}</h5>
-        <p>by {{ tl.creator_name }}</p>
-    </div>
-    {% endfor %}
+{% extends "base.html" %}
 
-    <script src="static/js/app.js"></script>
-</body>
-</html>
+{% block title %}Dashboard - 2Y2B Tier List{% endblock %}
+
+{% block content %}
+<div style="margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1>Tier Lists</h1>
+        <a href="{{ url_for('editor') }}" class="btn">Create New Tier List</a>
+    </div>
+
+    {% if tierlists %}
+    <div class="tierlist-grid">
+        {% for tierlist in tierlists %}
+        <div class="card">
+            <h3>{{ tierlist.title }}</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">by {{ tierlist.creator_name }}</p>
+            <p style="margin-top: 1rem;">{{ tierlist.description }}</p>
+            <a href="{{ url_for('view', id=tierlist.id) }}"
+                style="color: var(--primary-color); display: inline-block; margin-top: 1rem;">View Tier List &rarr;</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 4rem; color: var(--text-muted);">
+        <p>work in progress or sum</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

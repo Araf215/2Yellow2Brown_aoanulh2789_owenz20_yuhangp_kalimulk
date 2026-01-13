@@ -1,12 +1,8 @@
-# Aoanul Hoque (PM), Kalimul Kaif, Owen Zeng, Yuhang Pan
-# 2Y2B TierList Creator by 2Yellow2Brown
-# SoftDev
-# P02: Makers Makin' It, Act I
-# Jan 2026
+
 
 from flask import Flask, render_template, request, session, redirect, url_for
 
-from data import check_acc, check_password, insert_acc, get_recent_tierlists
+from data import check_acc, check_password, insert_acc, get_recent_tierlists, get_tierlist
 
 app = Flask(__name__)
 app.secret_key = "secret"
@@ -14,8 +10,13 @@ app.secret_key = "secret"
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if 'username' in session:
-        return redirect(url_for("home"))
+        return redirect(url_for("dashboard"))
 
+    return redirect(url_for("login"))
+
+@app.route("/logout")
+def logout():
+    session.pop('username', None)
     return redirect(url_for("login"))
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -24,7 +25,7 @@ def register():
         username = request.form.get('username').strip().lower()
         password = request.form.get('password').strip()
 
-        # reload page if no username or password was entered
+
         if not username or not password:
             return render_template("register.html", error="No username or password inputted")
 
@@ -35,7 +36,7 @@ def register():
         insert_acc(username, password)
 
         session['username'] = username
-        return redirect(url_for("home"))
+        return redirect(url_for("dashboard"))
     return render_template("register.html")
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -45,24 +46,24 @@ def login():
         username = request.form.get('username').strip().lower()
         password = request.form.get('password').strip()
 
-        # render login page if username or password box is empty
+
         if not username or not password:
             return render_template('login.html', error="No username or password inputted")
 
-        #search user table for password from a certain username
+
         account = check_password(username)
 
-        #if there is no account then reload page
+
         if account is None:
             return render_template("login.html", error="Username or password is incorrect")
 
-        # check if password is correct, if not then reload page
+
         if account[0] != password:
             return render_template("login.html", error="Username or password is incorrect")
 
-        # if password is correct redirect home
+
         session["username"] = username
-        return redirect(url_for("home"))
+        return redirect(url_for("dashboard"))
 
     return render_template('login.html')
 
@@ -78,7 +79,15 @@ def profile():
 
 @app.route("/view", methods=['GET', 'POST'])
 def view():
-    return render_template('view.html')
+    tierlist_id = request.args.get('id')
+    if not tierlist_id:
+        return redirect(url_for('dashboard'))
+    
+    tierlist = get_tierlist(tierlist_id)
+    if not tierlist:
+        return render_template('error.html', message="Tier List not found")
+        
+    return render_template('view.html', tierlist=tierlist)
 
 @app.route("/editor", methods=['GET', 'POST'])
 def editor():
@@ -87,3 +96,6 @@ def editor():
 @app.route("/error", methods=['GET', 'POST'])
 def error():
     return render_template('error.html')
+if __name__ == "__main__":
+    app.debug = True
+    app.run()
