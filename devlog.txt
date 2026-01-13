@@ -2,3 +2,6 @@ yuhangP -- 2026-01-12 19:57
 - add routes inside __init__.py for the html pages
 - set up database
 - add login and register
+
+aoanulH -- 2026-01-13 11:28
+- Revised Design Doc & Uploaded
