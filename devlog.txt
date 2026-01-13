@@ -1,0 +1,4 @@
+yuhangP -- 2026-01-12 19:57
+- add routes inside __init__.py for the html pages
+- set up database
+- add login and register
