@@ -32,7 +32,7 @@ def register():
         acc = check_acc(username)
         if acc:
             return render_template("register.html", error="Username already exists")
-        
+
         insert_acc(username, password)
 
         session['username'] = username
@@ -69,6 +69,8 @@ def login():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
+    if request.method == "POST":
+        search = request.form.get('searchbar').strip().lower()
     tierlists = get_recent_tierlists()
     return render_template('dashboard.html',
                            tierlists = tierlists)
@@ -82,11 +84,11 @@ def view():
     tierlist_id = request.args.get('id')
     if not tierlist_id:
         return redirect(url_for('dashboard'))
-    
+
     tierlist = get_tierlist(tierlist_id)
     if not tierlist:
         return render_template('error.html', message="Tier List not found")
-        
+
     return render_template('view.html', tierlist=tierlist)
 
 @app.route("/editor", methods=['GET', 'POST'])

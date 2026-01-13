@@ -9,6 +9,11 @@
         <a href="{{ url_for('editor') }}" class="btn">Create New Tier List</a>
     </div>
 
+    <form method="post" onsubmit="onSearch()">
+        <label for="searchbar">Search</label>
+        <input type="submit" name="searchbar" value="Submit">
+    </form>
+
     {% if tierlists %}
     <div class="tierlist-grid">
         {% for tierlist in tierlists %}
@@ -27,4 +32,5 @@
     </div>
     {% endif %}
 </div>
+<script src="static/js/app.js"></script>
 {% endblock %}
