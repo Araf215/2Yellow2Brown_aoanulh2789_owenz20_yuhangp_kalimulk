@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, request, session, redirect, url_for
 
-from data import check_acc, check_password, insert_acc, get_recent_tierlists, get_tierlist
+from data import check_acc, check_password, insert_acc, search_tierlist, get_recent_tierlists, get_tierlist
 
 app = Flask(__name__)
 app.secret_key = "secret"
@@ -69,9 +69,12 @@ def login():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
-    if request.method == "POST":
-        search = request.form.get('searchbar').strip().lower()
-    tierlists = get_recent_tierlists()
+    search = request.args.get("searchbar")
+    if search:
+        search = search.strip().lower()
+        tierlists = search_tierlist(search)
+    else:
+        tierlists = get_recent_tierlists()
     return render_template('dashboard.html',
                            tierlists = tierlists)
 

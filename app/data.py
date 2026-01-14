@@ -39,16 +39,14 @@ def insert_acc(username, password):
     conn.commit()
     conn.close()
 
-def get_recent_tierlists():
+def convert_to_list(tierlists):
     conn = get_db_connection()
     result = []
-    tierlists = conn.execute("SELECT * FROM tierlists ORDER BY last_update DESC LIMIT 10").fetchall()
-    
     for tierlist in tierlists:
-        tiers = conn.execute("SELECT * FROM tiers where tierlist_id = ? ORDER BY id", (tierlist['id'],)).fetchall()
+        tiers = conn.execute("SELECT * FROM tiers WHERE tierlist_id = ? ORDER BY id", (tierlist['id'],)).fetchall()
         tlist = []
         for tier in tiers:
-            items = conn.execute("SELECT * FROM items where tier_id = ? ORDER BY id", (tier['id'],)).fetchall()
+            items = conn.execute("SELECT * FROM items WHERE tier_id = ? ORDER BY id", (tier['id'],)).fetchall()
             tlist.append({
                 "id": tier["id"],
                 "name": tier["name"],
@@ -72,6 +70,17 @@ def get_recent_tierlists():
     conn.close()
     return result
 
+def search_tierlist(title):
+    conn = get_db_connection()
+    tierlists = conn.execute("SELECT * FROM tierlists WHERE title = ?", (title,)).fetchall()
+    return convert_to_list(tierlists)
+
+def get_recent_tierlists():
+    conn = get_db_connection()
+    result = []
+    tierlists = conn.execute("SELECT * FROM tierlists ORDER BY last_update DESC LIMIT 10").fetchall()
+    return convert_to_list(tierlists)
+
 def get_tierlist(id):
     conn = get_db_connection()
     tierlist = conn.execute("SELECT * FROM tierlists WHERE id = ?", (id,)).fetchone()
@@ -80,30 +89,4 @@ def get_tierlist(id):
         conn.close()
         return None
 
-    tiers = conn.execute("SELECT * FROM tiers where tierlist_id = ? ORDER BY id", (id,)).fetchall()
-    tlist = []
-    for tier in tiers:
-        items = conn.execute("SELECT * FROM items where tier_id = ? ORDER BY id", (tier['id'],)).fetchall()
-        tlist.append({
-            "id": tier["id"],
-            "name": tier["name"],
-            "items": [{
-                    "id": item["id"],
-                    "name": item["name"],
-                    "image": item["image"],
-                    "position": item["position"]
-                } for item in items
-            ]
-        })
-    
-    result = {
-        "id": tierlist["id"],
-        "title": tierlist["title"],
-        "description": tierlist["description"],
-        "is_public": tierlist["is_public"],
-        "last_update": tierlist["last_update"],
-        "creator_name": tierlist["creator_name"],
-        "tiers": tlist
-    }
-    conn.close()
-    return result
+    return convert_to_list(tierlist)[0]

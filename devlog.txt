@@ -5,3 +5,6 @@ yuhangP -- 2026-01-12 19:57
 
 aoanulH -- 2026-01-13 11:28
 - Revised Design Doc & Uploaded
+
+yuhangP -- 2026-01-13 19:49
+- working search bar, only on submit not live search

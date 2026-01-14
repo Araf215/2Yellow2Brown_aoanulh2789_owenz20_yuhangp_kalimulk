@@ -9,9 +9,8 @@
         <a href="{{ url_for('editor') }}" class="btn">Create New Tier List</a>
     </div>
 
-    <form method="post" onsubmit="onSearch()">
-        <label for="searchbar">Search</label>
-        <input type="submit" name="searchbar" value="Submit">
+    <form method="get" action="/dashboard">
+        <input type="text" name="searchbar" placeholder="Search for tierlist..." value="{{ request.args.get('searchbar', '') }}"">
     </form>
 
     {% if tierlists %}
