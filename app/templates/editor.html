@@ -1,10 +1,159 @@
 {% extends "base.html" %}
 
-{% block title %}Create Tier List - 2Y2B Tier List{% endblock %}
+{% block title %}Editor - 2Y2B Tier List{% endblock %}
 
 {% block content %}
-<div style="text-align: center; padding: 4rem;">
-    <h1>Create new list</h1>
-    <p>funkled</p>
+<div class="editor-wrap">
+
+  <div class="editor-header">
+    <div>
+      <h1>Tier List Editor</h1>
+      <p class="muted">Add items, customize them, then drag them to the rank of your choosing. Then save!</p>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+  </div>
+  <div class="editor-bottom">
+    <div class="editor-grid">
+      <!-- Adding a new item -->
+      <div class="card">
+        <h2>Add New Item</h2>
+
+        <div class="form-group">
+          <label for="itemText">Item text</label> <!-- Item  text  -->
+          <input id="itemText" type="text" placeholder="e.g., Minecraft">
+          <div class="form-help">Required.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="itemImg">Image URL (optional)</label> <!-- Image url functionality-->
+          <input id="itemImg" type="text" placeholder="https://...jpg/png/webp">
+          <div class="form-help">Optional. If blank, item is text-only.</div>
+        </div>
+
+        <div class="btn-row">
+          <button id="addItemBtn" class="btn" type="button">Add to Unranked Pool</button>
+          <button id="clearFormBtn" class="btn btn-secondary" type="button">Clear</button>
+        </div>
+
+        <div id="errMsg" class="err-inline" style="display:none;"></div>
+      </div>
+
+      <!-- Item Pool -->
+      <div class="card">
+        <div class="pool-header">
+          <h2>Unranked Item Pool</h2>
+          <div class="muted"><span id="count">0</span> items</div>
+        </div>
+
+        <div id="pool" class="pool">
+          <div id="emptyState" class="muted">No items yet. Add one on the left.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </div>
+
+<script>
+  const pool = document.getElementById("pool");
+  const emptyState = document.getElementById("emptyState");
+  const count = document.getElementById("count");
+
+  const itemText = document.getElementById("itemText");
+  const itemImg = document.getElementById("itemImg");
+  const addItemBtn = document.getElementById("addItemBtn");
+  const clearFormBtn = document.getElementById("clearFormBtn");
+  const errMsg = document.getElementById("errMsg");
+
+  let items = []; // {id, text, img}
+
+  function showError(msg) {
+    errMsg.style.display = "block";
+    errMsg.textContent = msg;
+  }
+  function clearError() {
+    errMsg.style.display = "none";
+    errMsg.textContent = "";
+  }
+
+  function safeId() {
+    return "i_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  function render() {
+    pool.querySelectorAll(".item-card").forEach(n => n.remove());
+
+    emptyState.style.display = items.length === 0 ? "block" : "none";
+    count.textContent = items.length.toString();
+
+    for (const it of items) {
+      const card = document.createElement("div");
+      card.className = "item-card";
+      card.dataset.itemId = it.id;
+
+      if (it.img) {
+        const img = document.createElement("img");
+        img.src = it.img;
+        img.alt = it.text;
+        img.loading = "lazy";
+        img.onerror = () => img.remove();
+        card.appendChild(img);
+      }
+
+      const body = document.createElement("div");
+      body.className = "item-body";
+
+      const text = document.createElement("div");
+      text.className = "item-text";
+      text.textContent = it.text;
+
+      const del = document.createElement("button");
+      del.className = "remove-btn";
+      del.type = "button";
+      del.textContent = "Remove";
+      del.onclick = () => {
+        items = items.filter(x => x.id !== it.id);
+        render();
+      };
+
+      body.appendChild(text);
+      body.appendChild(del);
+
+      card.appendChild(body);
+      pool.appendChild(card);
+    }
+  }
+
+  function addItem() {
+    clearError();
+
+    const text = itemText.value.trim();
+    const img = itemImg.value.trim();
+
+    if (!text) {
+      showError("Item text is required.");
+      return;
+    }
+
+    items.push({ id: safeId(), text, img });
+    itemText.value = "";
+    itemImg.value = "";
+    itemText.focus();
+    render();
+  }
+
+  addItemBtn.addEventListener("click", addItem);
+  clearFormBtn.addEventListener("click", () => {
+    itemText.value = "";
+    itemImg.value = "";
+    clearError();
+    itemText.focus();
+  });
+
+  itemText.addEventListener("keydown", (e) => { if (e.key === "Enter") addItem(); });
+  itemImg.addEventListener("keydown", (e) => { if (e.key === "Enter") addItem(); });
+
+  render();
+</script>
 {% endblock %}
