@@ -8,3 +8,4 @@ aoanulH -- 2026-01-13 11:28
 
 yuhangP -- 2026-01-13 19:49
 - working search bar, only on submit not live search
+- add gitignoreß
