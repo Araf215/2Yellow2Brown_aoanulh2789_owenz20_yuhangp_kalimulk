@@ -73,12 +73,14 @@ def convert_to_list(tierlists):
 def search_tierlist(title):
     conn = get_db_connection()
     tierlists = conn.execute("SELECT * FROM tierlists WHERE title = ?", (title,)).fetchall()
+    conn.close()
     return convert_to_list(tierlists)
 
 def get_recent_tierlists():
     conn = get_db_connection()
     result = []
     tierlists = conn.execute("SELECT * FROM tierlists ORDER BY last_update DESC LIMIT 10").fetchall()
+    conn.close()
     return convert_to_list(tierlists)
 
 def get_tierlist(id):
@@ -88,5 +90,5 @@ def get_tierlist(id):
     if not tierlist:
         conn.close()
         return None
-
+    conn.close()
     return convert_to_list(tierlist)[0]
