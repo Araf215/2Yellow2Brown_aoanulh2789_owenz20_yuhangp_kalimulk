@@ -9,3 +9,8 @@ aoanulH -- 2026-01-13 11:28
 yuhangP -- 2026-01-13 19:49
 - working search bar, only on submit not live search
 - add gitignore
+
+aoanulH -- 2026-01-13 10:52
+-  Added basic css for item cards, pools, buttons , etc (will replace with bootstrap later)
+- started editor.html (card creation w/ image url support, item pool + counter, removing item button)
+-  need to move all js from editor.html to editor.js and link it.
