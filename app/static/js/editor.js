@@ -77,8 +77,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Tier dropdown
       const select = document.createElement("select");
-      select.className = "tier-select";
+	select.className = "tier-select";
 
+      let  user_tiers = []
+
+      document.getElementById("put_html_form_ID_here").addEventListener('submit', function(event)) {
+	  const formData = new FormData(this)
+	  const url = formData.get('url')
+
+	  fetch(url).then(response => {
+	      if (!response.ok) {
+		  throw new Error('shid is cooked: ' + response.statusText)
+	      }
+	      user_tiers = response.json()
+      }
+
+      // replace below array with user_tiers; make sure user_tiers = (user_tiers.empty ? default : user_tiers)
       ["unranked", "S", "A", "B", "C", "D", "F"].forEach(t => {
         const opt = document.createElement("option");
         opt.value = t;
