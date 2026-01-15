@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, request, session, redirect, url_for
 
-from data import check_acc, check_password, insert_acc, search_tierlist, get_best_tierlists, get_tierlist
+from data import check_acc, check_password, insert_acc, search_tierlist, get_best_tierlists, get_tierlist, get_user_info, get_user_tierlists
 
 app = Flask(__name__)
 app.secret_key = "secret"
@@ -80,7 +80,20 @@ def dashboard():
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
-    return render_template('profile.html')
+    username = request.args.get('username') or session.get('username')
+    if not username:
+        return redirect(url_for('login'))
+    
+    user_info = get_user_info(username)
+    if not user_info:
+        return render_template('error.html', message="User not found")
+        
+    user_tierlists = get_user_tierlists(username)
+    
+    return render_template('profile.html', 
+                         user=user_info, 
+                         tierlists=user_tierlists,
+                         is_own_profile=(username == session.get('username')))
 
 @app.route("/view", methods=['GET', 'POST'])
 def view():

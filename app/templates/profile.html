@@ -1,1 +1,61 @@
 {% extends "base.html" %}
+
+{% block title %}{{ user.name }}'s Profile - 2Y2B Tier List{% endblock %}
+
+{% block content %}
+<div class="profile-container" style="margin-top: 2rem;">
+    <div class="card"
+        style="margin-bottom: 2rem; padding: 2.5rem; background: linear-gradient(135.4deg, rgba(25, 25, 25, 1) 0%, rgba(35, 35, 35, 1) 100%);">
+        <div style="display: flex; align-items: center; gap: 2rem;">
+            <div
+                style="width: 100px; height: 100px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: 600; color: #000;">
+                {{ user.name[0].upper() }}
+            </div>
+            <div>
+                <h1 style="margin: 0; font-size: 2.5rem;">{{ user.name }}</h1>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">
+                    Member since {{ user.created_at.split(' ')[0] if user.created_at else 'N/A' }}
+                </p>
+                {% if is_own_profile %}
+                <span
+                    style="display: inline-block; padding: 0.25rem 0.75rem; background: rgba(var(--primary-rgb), 0.1); color: var(--primary-color); border-radius: 20px; font-size: 0.8rem; margin-top: 1rem;">This
+                    is you</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 3rem;">
+        <h2 style="margin-bottom: 1.5rem;">Tier Lists Created</h2>
+
+        {% if tierlists %}
+        <div class="tierlist-grid">
+            {% for tierlist in tierlists %}
+            <div class="card">
+                <h3>{{ tierlist.title }}</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Last updated: {{ tierlist.last_update }}</p>
+                <p style="margin-top: 1rem;">{{ tierlist.description or 'No description provided.' }}</p>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
+                    <div
+                        style="display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 0.25rem 0.75rem; border-radius: 6px;">
+                        <span style="color: var(--primary-color); margin-right: 0.5rem;">▲</span>
+                        <span>{{ tierlist.upvotes }}</span>
+                    </div>
+                    <a href="{{ url_for('view', id=tierlist.id) }}"
+                        style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Edit &rarr;</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="card" style="text-align: center; padding: 4rem; color: var(--text-muted);">
+            <p>No tier lists yet</p>
+            {% if is_own_profile %}
+            <a href="{{ url_for('editor') }}" class="btn" style="margin-top: 1rem; display: inline-block;">Create
+                one</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

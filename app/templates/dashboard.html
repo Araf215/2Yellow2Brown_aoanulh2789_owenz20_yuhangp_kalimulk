@@ -10,15 +10,18 @@
     </div>
 
     <form method="get" action="/dashboard">
-        <input type="text" name="searchbar" placeholder="Search for tierlist..." value="{{ request.args.get('searchbar', '') }}"">
+        <input type="text" name="searchbar" placeholder="Search for tierlist..."
+            value="{{ request.args.get('searchbar', '') }}"">
     </form>
 
     {% if tierlists %}
-    <div class="tierlist-grid">
+    <div class=" tierlist-grid">
         {% for tierlist in tierlists %}
         <div class="card">
             <h3>{{ tierlist.title }}</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">by {{ tierlist.creator_name }}</p>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">by <a
+                    href="{{ url_for('profile', username=tierlist.creator_name) }}"
+                    style="color: var(--primary-color); text-decoration: none;">{{ tierlist.creator_name }}</a></p>
             <p style="margin-top: 1rem;">{{ tierlist.description }}</p>
             <div>
                 <button>▲</button>
@@ -29,12 +32,12 @@
                 style="color: var(--primary-color); display: inline-block; margin-top: 1rem;">View Tier List &rarr;</a>
         </div>
         {% endfor %}
-    </div>
-    {% else %}
-    <div style="text-align: center; padding: 4rem; color: var(--text-muted);">
-        <p>work in progress or sum</p>
-    </div>
-    {% endif %}
+</div>
+{% else %}
+<div style="text-align: center; padding: 4rem; color: var(--text-muted);">
+    <p>work in progress or sum</p>
+</div>
+{% endif %}
 </div>
 <script src="static/js/app.js"></script>
 {% endblock %}

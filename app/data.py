@@ -1,6 +1,8 @@
 import sqlite3
+import os
 
-DB_FILE = "data.db"
+ABS_PATH = os.path.dirname(os.path.abspath(__file__))
+DB_FILE = os.path.join(ABS_PATH, "data.db")
 
 def get_db_connection():
     conn = sqlite3.connect(DB_FILE)
@@ -11,15 +13,20 @@ def init_db():
     conn = get_db_connection()
     c = conn.cursor()
     # create tables if it isn't there already
-    c.execute("CREATE TABLE IF NOT EXISTS users (name TEXT NOT NULL COLLATE NOCASE, password TEXT NOT NULL, UNIQUE(name))")
+    c.execute("CREATE TABLE IF NOT EXISTS users (name TEXT NOT NULL COLLATE NOCASE, password TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE(name))")
+    
+    c.execute("PRAGMA table_info(users)")
+    columns = [column[1] for column in c.fetchall()]
+    if 'created_at' not in columns:
+        c.execute("ALTER TABLE users ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    
     c.execute("CREATE TABLE IF NOT EXISTS tierlists (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL COLLATE NOCASE, description TEXT, upvotes INTEGER DEFAULT 0, is_public BOOLEAN, last_update DATE, creator_name TEXT)")
     c.execute("CREATE TABLE IF NOT EXISTS tiers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL COLLATE NOCASE, tierlist_id INTEGER, FOREIGN KEY (tierlist_id) REFERENCES tierlists(id) ON DELETE CASCADE)")
     c.execute("CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL COLLATE NOCASE, image TEXT, position INTEGER, tier_id INTEGER, FOREIGN KEY (tier_id) REFERENCES tiers(id) ON DELETE CASCADE)")
-    c.execute("CREATE TABLE IF NOT EXISTS votes (name TEXT, tierlist_id INTEGER, value INTEGER DEFAULT 0, FOREIGN KEY (tierlist_id) REFERENCES tierlists(id) ON DELETE CASCADE))")
+    c.execute("CREATE TABLE IF NOT EXISTS votes (name TEXT, tierlist_id INTEGER, value INTEGER DEFAULT 0, FOREIGN KEY (tierlist_id) REFERENCES tierlists(id) ON DELETE CASCADE)")
     conn.commit()
     conn.close()
 
-# Initialize DB on import
 init_db()
 
 def check_acc(username):
@@ -36,9 +43,21 @@ def check_password(username):
 
 def insert_acc(username, password):
     conn = get_db_connection()
-    conn.execute("INSERT INTO users (name, password) VALUES (?, ?)", (username, password))
+    conn.execute("INSERT INTO users (name, password, created_at) VALUES (?, ?, CURRENT_TIMESTAMP)", (username, password))
     conn.commit()
     conn.close()
+
+def get_user_info(username):
+    conn = get_db_connection()
+    user = conn.execute("SELECT name, created_at FROM users WHERE name = ?", (username,)).fetchone()
+    conn.close()
+    return user
+
+def get_user_tierlists(username):
+    conn = get_db_connection()
+    tierlists = conn.execute("SELECT * FROM tierlists WHERE creator_name = ? ORDER BY last_update DESC", (username,)).fetchall()
+    conn.close()
+    return convert_to_list(tierlists)
 
 def convert_to_list(tierlists):
     conn = get_db_connection()
@@ -98,4 +117,4 @@ def get_tierlist(id):
         conn.close()
         return None
     conn.close()
-    return convert_to_list(tierlist)[0]
+    return convert_to_list([tierlist])[0]
