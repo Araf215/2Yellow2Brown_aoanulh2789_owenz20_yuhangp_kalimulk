@@ -278,5 +278,48 @@ footer {
 }
 
 .editor-bottom {
-  margin-top: 30rem;   
+  margin-top: 2rem;   
+}
+
+/* tier list rows */
+.tier-row {
+    display: flex;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 80px;
+    background: var(--card-bg);
+}
+
+.tier-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+    padding: 1rem;
+    font-weight: 700;
+    font-size: 2rem;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    border-right: 1px solid rgba(0,0,0,0.2);
+}
+
+.tier-content {
+    flex: 1;
+    padding: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-start;
+    align-content: flex-start;
+    background: rgba(2, 6, 23, 0.35);
+    min-height: 80px;
+}
+
+@media (max-width: 768px) {
+    .tier-label {
+        min-width: 70px;
+        font-size: 1.5rem;
+    }
 }
