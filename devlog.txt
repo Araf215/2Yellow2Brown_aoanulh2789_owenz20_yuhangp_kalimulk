@@ -17,3 +17,7 @@ aoanulH -- 2026-01-13 10:52
 
 yuhangP -- 2026-01-14 22:01
 - Added new table in db to keep track of upvotes, added upvote/downvote button to tierlist card
+
+aoanulH -- 2026-01-14 22:53
+- Restructured editor.html (moved javascript into a seperate js file in static)
+- Added comments to  both editor.html and editor.js for devo readability.  
