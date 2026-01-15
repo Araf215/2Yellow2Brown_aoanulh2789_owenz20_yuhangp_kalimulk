@@ -14,12 +14,12 @@ def init_db():
     c = conn.cursor()
     # create tables if it isn't there already
     c.execute("CREATE TABLE IF NOT EXISTS users (name TEXT NOT NULL COLLATE NOCASE, password TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE(name))")
-    
+
     c.execute("PRAGMA table_info(users)")
     columns = [column[1] for column in c.fetchall()]
     if 'created_at' not in columns:
         c.execute("ALTER TABLE users ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    
+
     c.execute("CREATE TABLE IF NOT EXISTS tierlists (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL COLLATE NOCASE, description TEXT, upvotes INTEGER DEFAULT 0, is_public BOOLEAN, last_update DATE, creator_name TEXT)")
     c.execute("CREATE TABLE IF NOT EXISTS tiers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL COLLATE NOCASE, tierlist_id INTEGER, FOREIGN KEY (tierlist_id) REFERENCES tierlists(id) ON DELETE CASCADE)")
     c.execute("CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL COLLATE NOCASE, image TEXT, position INTEGER, tier_id INTEGER, FOREIGN KEY (tier_id) REFERENCES tiers(id) ON DELETE CASCADE)")
@@ -112,9 +112,20 @@ def get_best_tierlists():
 def get_tierlist(id):
     conn = get_db_connection()
     tierlist = conn.execute("SELECT * FROM tierlists WHERE id = ?", (id,)).fetchone()
-    
+
     if not tierlist:
         conn.close()
         return None
     conn.close()
     return convert_to_list([tierlist])[0]
+
+def upvote_tierlist(name, tierlist_id, value):
+    conn = get_db_connection()
+    tierlist = conn.execute("SELECT * FROM tierlists where id = ?", (tierlist_id,)).fetchone()
+    if value == 1:
+        conn.execute("UPDATE tierlist SET upvotes = ?", (tierlist[3] + 1))
+    else:
+        conn.execute("UPDATE tierlist SET upvotes = ?", (tierlist[3] - 1))
+    conn.execute("INSERT INTO votes (name, tierlist_id, value) VALUES (?, ?, ?)", (name, tierlist_id, value))
+    conn.commit()
+    conn.close()
