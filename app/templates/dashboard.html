@@ -20,6 +20,11 @@
             <h3>{{ tierlist.title }}</h3>
             <p style="color: var(--text-muted); font-size: 0.9rem;">by {{ tierlist.creator_name }}</p>
             <p style="margin-top: 1rem;">{{ tierlist.description }}</p>
+            <div>
+                <button>▲</button>
+                <span>{{ tierlist.upvotes }}</span>
+                <button>▼</button>
+            </div>
             <a href="{{ url_for('view', id=tierlist.id) }}"
                 style="color: var(--primary-color); display: inline-block; margin-top: 1rem;">View Tier List &rarr;</a>
         </div>

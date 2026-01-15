@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, request, session, redirect, url_for
 
-from data import check_acc, check_password, insert_acc, search_tierlist, get_recent_tierlists, get_tierlist
+from data import check_acc, check_password, insert_acc, search_tierlist, get_best_tierlists, get_tierlist
 
 app = Flask(__name__)
 app.secret_key = "secret"
@@ -74,7 +74,7 @@ def dashboard():
         search = search.strip().lower()
         tierlists = search_tierlist(search)
     else:
-        tierlists = get_recent_tierlists()
+        tierlists = get_best_tierlists()
     return render_template('dashboard.html',
                            tierlists = tierlists)
 

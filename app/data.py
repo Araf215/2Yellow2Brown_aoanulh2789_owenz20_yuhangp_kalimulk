@@ -12,9 +12,10 @@ def init_db():
     c = conn.cursor()
     # create tables if it isn't there already
     c.execute("CREATE TABLE IF NOT EXISTS users (name TEXT NOT NULL COLLATE NOCASE, password TEXT NOT NULL, UNIQUE(name))")
-    c.execute("CREATE TABLE IF NOT EXISTS tierlists (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL COLLATE NOCASE, description TEXT, is_public BOOLEAN, last_update DATE, creator_name TEXT)")
+    c.execute("CREATE TABLE IF NOT EXISTS tierlists (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL COLLATE NOCASE, description TEXT, upvotes INTEGER DEFAULT 0, is_public BOOLEAN, last_update DATE, creator_name TEXT)")
     c.execute("CREATE TABLE IF NOT EXISTS tiers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL COLLATE NOCASE, tierlist_id INTEGER, FOREIGN KEY (tierlist_id) REFERENCES tierlists(id) ON DELETE CASCADE)")
     c.execute("CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL COLLATE NOCASE, image TEXT, position INTEGER, tier_id INTEGER, FOREIGN KEY (tier_id) REFERENCES tiers(id) ON DELETE CASCADE)")
+    c.execute("CREATE TABLE IF NOT EXISTS votes (name TEXT, tierlist_id INTEGER, value INTEGER DEFAULT 0, FOREIGN KEY (tierlist_id) REFERENCES tierlists(id) ON DELETE CASCADE))")
     conn.commit()
     conn.close()
 
@@ -62,6 +63,7 @@ def convert_to_list(tierlists):
             "id": tierlist["id"],
             "title": tierlist["title"],
             "description": tierlist["description"],
+            "upvotes": tierlist["upvotes"],
             "is_public": tierlist["is_public"],
             "last_update": tierlist["last_update"],
             "creator_name": tierlist["creator_name"],
@@ -78,8 +80,13 @@ def search_tierlist(title):
 
 def get_recent_tierlists():
     conn = get_db_connection()
-    result = []
     tierlists = conn.execute("SELECT * FROM tierlists ORDER BY last_update DESC LIMIT 10").fetchall()
+    conn.close()
+    return convert_to_list(tierlists)
+
+def get_best_tierlists():
+    conn = get_db_connection()
+    tierlists = conn.execute("SELECT * FROM tierlists ORDER BY upvotes DESC LIMIT 10").fetchall()
     conn.close()
     return convert_to_list(tierlists)
 
