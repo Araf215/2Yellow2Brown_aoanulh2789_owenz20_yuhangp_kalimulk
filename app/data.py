@@ -25,7 +25,7 @@ def init_db():
     c.execute("CREATE TABLE IF NOT EXISTS tierlists (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL COLLATE NOCASE, description TEXT, upvotes INTEGER DEFAULT 0, is_public BOOLEAN, last_update DATE, creator_name TEXT)")
     c.execute("CREATE TABLE IF NOT EXISTS tiers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL COLLATE NOCASE, tierlist_id INTEGER, FOREIGN KEY (tierlist_id) REFERENCES tierlists(id) ON DELETE CASCADE)")
     c.execute("CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL COLLATE NOCASE, image TEXT, position INTEGER, tier_id INTEGER, FOREIGN KEY (tier_id) REFERENCES tiers(id) ON DELETE CASCADE)")
-    c.execute("CREATE TABLE IF NOT EXISTS votes (name TEXT, tierlist_id INTEGER, value INTEGER DEFAULT 0, FOREIGN KEY (tierlist_id) REFERENCES tierlists(id) ON DELETE CASCADE)")
+    c.execute("CREATE TABLE IF NOT EXISTS votes (name TEXT, tierlist_id INTEGER, value INTEGER DEFAULT 0, FOREIGN KEY (tierlist_id) REFERENCES tierlists(id) ON DELETE CASCADE, UNIQUE(name, tierlist_id))")
     conn.commit()
     conn.close()
 
@@ -133,9 +133,23 @@ def get_tierlist(id):
 # get the # of upvotes in tierlist the user is tryna upvote, update the upvote count, and return the new number of upvotes to be displayed
 def upvote_tierlist(name, tierlist_id, value):
     conn = get_db_connection()
+    entry = conn.execute("SELECT value FROM votes WHERE name = ? AND tierlist_id = ?", (name, tierlist_id)).fetchone()
     upvotes = conn.execute("SELECT upvotes FROM tierlists where id = ?", (tierlist_id,)).fetchone()[0]
-    conn.execute("UPDATE tierlists SET upvotes = ?", (upvotes + value))
-    conn.execute("INSERT INTO votes (name, tierlist_id, value) VALUES (?, ?, ?)", (name, tierlist_id, value))
+    prev_value = entry[0] if entry else 0
+    if prev_value == 0:
+        newvalue = upvotes + value
+    else:
+        if prev_value == value:
+            newvalue = upvotes - value
+            conn.execute("UPDATE tierlists SET upvotes = ? WHERE id = ?", (newvalue, tierlist_id))
+            conn.execute("INSERT OR REPLACE INTO votes (name, tierlist_id, value) VALUES (?, ?, ?)", (name, tierlist_id, 0))
+            conn.commit()
+            conn.close()
+            return newvalue
+        else:
+            newvalue = upvotes + 2 * value
+    conn.execute("UPDATE tierlists SET upvotes = ? WHERE id = ?", (newvalue, tierlist_id))
+    conn.execute("INSERT OR REPLACE INTO votes (name, tierlist_id, value) VALUES (?, ?, ?)", (name, tierlist_id, value))
     conn.commit()
     conn.close()
-    return upvotes + value
+    return newvalue

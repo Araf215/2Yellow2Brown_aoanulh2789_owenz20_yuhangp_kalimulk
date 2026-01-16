@@ -6,7 +6,7 @@ document.addEventListener('click', async (e) => {
     }
 
     const votingDiv = e.target.closest(".voting");
-    const voteCountSpan = votingDiv.queryselector(".votecount");
+    const voteCountSpan = votingDiv.querySelector(".votecount");
     const tierlistID = votingDiv.dataset.tierlistid;
     const value = e.target.classList.contains("upvote") ? 1 : -1;
 

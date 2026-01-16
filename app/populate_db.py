@@ -87,5 +87,4 @@ def populate_tables():
     create_items(anime_tiers[2], ["Blue Bird"])
     create_items(anime_tiers[5], ["None"])
 
-if __name__ == "__main__":
-    populate_tables()
+populate_tables()
