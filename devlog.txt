@@ -21,3 +21,6 @@ yuhangP -- 2026-01-14 22:01
 aoanulH -- 2026-01-14 22:53
 - Restructured editor.html (moved javascript into a seperate js file in static)
 - Added comments to  both editor.html and editor.js for devo readability.  
+
+yuhangP -- 2026-01-15 19:29
+- Added js to use async fetch post requests to update upvotes without reloading
