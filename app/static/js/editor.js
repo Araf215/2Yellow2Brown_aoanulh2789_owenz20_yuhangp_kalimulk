@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const errMsg = document.getElementById("errMsg");
 
   const saveTierBtn = document.getElementById("saveTierBtn");
+  const tierListTitle = document.getElementById("tierListTitle");
+  const tierListDesc = document.getElementById("tierListDesc");
 
   // Each item is an object: { id, text, img }
   let items = [];
@@ -143,12 +145,12 @@ document.addEventListener("DOMContentLoaded", () => {
   async function saveTierList() {
     clearError();
 
-    const titleInput = window.prompt("Tier list title:");
-    if (titleInput === null) return;
+    const title = tierListTitle.value.trim();
+    const description = tierListDesc.value.trim();
 
-    const title = titleInput.trim();
     if (!title) {
       showError("Tier list title is required.");
+      tierListTitle.focus();
       return;
     }
 
@@ -175,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
-          description: "",
+          description,
           tiers
         })
       });

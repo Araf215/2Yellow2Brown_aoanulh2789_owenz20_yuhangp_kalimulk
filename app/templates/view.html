@@ -5,60 +5,61 @@
 {% block content %}
 <div class="editor-wrap">
 
-  <div class="editor-header">
-    <div>
-      <h1>{{ tierlist.title }}</h1>
-      <p class="muted">
-        Created by {{ tierlist.creator_name }} • Last updated {{ tierlist.last_update }}
-      </p>
-      {% if tierlist.description %}
-        <p class="muted">{{ tierlist.description }}</p>
-      {% endif %}
-    </div>
-    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
-  </div>
+    <div class="editor-header">
+        <div>
+            <h1>{{ tierlist.title }}</h1>
+            <p class="muted">
+                Created by {{ tierlist.creator_name }} • Last updated {{ tierlist.last_update }}
+            </p>
+            {% if tierlist.description %}
+            <p class="muted" style="white-space: pre-wrap; margin-top: 0.5rem;">{{ tierlist.description }}</p>
+            {% endif %}
 
-  <div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;">
-      <h2>Tier List Rankings</h2>
+        </div>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
     </div>
 
-    {% for tier in tierlist.tiers %}
-      {% set t = tier.name %}
-      {% if t == 'S' %}
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;">
+            <h2>Tier List Rankings</h2>
+        </div>
+
+        {% for tier in tierlist.tiers %}
+        {% set t = tier.name %}
+        {% if t == 'S' %}
         {% set bg = 'linear-gradient(135deg, #ff6b6b, #ee5a6f)' %}
-      {% elif t == 'A' %}
+        {% elif t == 'A' %}
         {% set bg = 'linear-gradient(135deg, #ffd93d, #f9ca24)' %}
-      {% elif t == 'B' %}
+        {% elif t == 'B' %}
         {% set bg = 'linear-gradient(135deg, #6bcf7f, #4ecb71)' %}
-      {% elif t == 'C' %}
+        {% elif t == 'C' %}
         {% set bg = 'linear-gradient(135deg, #4fc3f7, #29b6f6)' %}
-      {% elif t == 'D' %}
+        {% elif t == 'D' %}
         {% set bg = 'linear-gradient(135deg, #ba68c8, #ab47bc)' %}
-      {% else %}
+        {% else %}
         {% set bg = 'linear-gradient(135deg, #90a4ae, #78909c)' %}
-      {% endif %}
+        {% endif %}
 
-      <div class="tier-row">
-        <div class="tier-label" style="background: {{ bg }};">
-          {{ t }}
-        </div>
-
-        <div class="tier-content">
-          {% for item in tier["items"] %}
-            <div class="item-card">
-              {% if item.image %}
-                <img src="{{ item.image }}" alt="{{ item.name }}">
-              {% endif %}
-              <div class="item-body">
-                <div class="item-text">{{ item.name }}</div>
-              </div>
+        <div class="tier-row">
+            <div class="tier-label" style="background: {{ bg }};">
+                {{ t }}
             </div>
-          {% endfor %}
+
+            <div class="tier-content">
+                {% for item in tier["items"] %}
+                <div class="item-card">
+                    {% if item.image %}
+                    <img src="{{ item.image }}" alt="{{ item.name }}">
+                    {% endif %}
+                    <div class="item-body">
+                        <div class="item-text">{{ item.name }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
-      </div>
-    {% endfor %}
-  </div>
+        {% endfor %}
+    </div>
 
 </div>
 {% endblock %}

@@ -34,7 +34,9 @@
             <div class="card">
                 <h3>{{ tierlist.title }}</h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem;">Last updated: {{ tierlist.last_update }}</p>
-                <p style="margin-top: 1rem;">{{ tierlist.description or 'No description provided.' }}</p>
+                <p style="margin-top: 1rem; white-space: pre-wrap;">{{ tierlist.description or 'No description
+                    provided.' }}</p>
+
                 <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
                     <div
                         style="display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 0.25rem 0.75rem; border-radius: 6px;">
