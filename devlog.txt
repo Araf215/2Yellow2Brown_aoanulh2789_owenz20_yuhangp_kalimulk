@@ -24,3 +24,4 @@ aoanulH -- 2026-01-14 22:53
 
 yuhangP -- 2026-01-15 19:29
 - Added js to use async fetch post requests to update upvotes without reloading
+- prepopulate db with populate_db.py
