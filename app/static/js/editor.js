@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const errMsg = document.getElementById("errMsg");
 
   const saveTierBtn = document.getElementById("saveTierBtn");
+  const tierListTitle = document.getElementById("tierListTitle");
+  const tierListDesc = document.getElementById("tierListDesc");
 
   // Each item is an object: { id, text, img }
   let items = [];

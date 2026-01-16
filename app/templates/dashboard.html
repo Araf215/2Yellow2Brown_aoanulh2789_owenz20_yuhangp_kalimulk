@@ -13,7 +13,7 @@
         <input type="text" name="searchbar" placeholder="Search for tierlist..."
             value="{{ request.args.get('searchbar', '') }}"">
     </form>
-
+    <br>
     {% if tierlists %}
     <div class=" tierlist-grid">
         {% for tierlist in tierlists %}
@@ -22,7 +22,7 @@
             <p style="color: var(--text-muted); font-size: 0.9rem;">by <a
                     href="{{ url_for('profile', username=tierlist.creator_name) }}"
                     style="color: var(--primary-color); text-decoration: none;">{{ tierlist.creator_name }}</a></p>
-            <p style="margin-top: 1rem;">{{ tierlist.description }}</p>
+            <p style="margin-top: 1rem; white-space: pre-wrap;">{{ tierlist.description }}</p>
             <div class="voting" data-tierlistid="{{ tierlist.id }}">
                 <button class="upvote">▲</button>
                 <span class="votecount">{{ tierlist.upvotes }}</span>

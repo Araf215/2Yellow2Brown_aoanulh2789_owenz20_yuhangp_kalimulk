@@ -3,6 +3,10 @@ yuhangP -- 2026-01-12 19:57
 - set up database
 - add login and register
 
+owenZ -- 2026-01-13 02:30
+-Add styling and html to the blank pages
+-login and register pages with frontend stuff
+
 aoanulH -- 2026-01-13 11:28
 - Revised Design Doc & Uploaded
 
@@ -22,6 +26,10 @@ aoanulH -- 2026-01-14 22:53
 - Restructured editor.html (moved javascript into a seperate js file in static)
 - Added comments to  both editor.html and editor.js for devo readability.  
 
+owenZ -- 2026-01-15 1:23
+- Made profile page with username and account time created
+- Profile has the tierlists that only user has created  
+
 yuhangP -- 2026-01-15 19:29
 - Added js to use async fetch post requests to update upvotes without reloading
 - prepopulate db with populate_db.py
@@ -31,3 +39,6 @@ aoanulH -- 2026-01-15  19:43
 -  updated init py  with a api endpoint so it can save the tierlist and pass it  to the javascript
 -  added create tierlist function in data.py that saves title, name, description, and the tierlist dictionary
 - fixed view.html with correct html  elements and it  displays the  tierlist  with its  uid. 
+
+owenZ -- 2026-01-16 12:56
+- Added descriptions to tierlists based on the form and backend already existing
