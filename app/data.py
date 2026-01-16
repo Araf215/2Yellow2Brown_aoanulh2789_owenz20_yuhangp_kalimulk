@@ -22,7 +22,7 @@ def init_db():
     if 'created_at' not in columns:
         c.execute("ALTER TABLE users ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 
-    c.execute("CREATE TABLE IF NOT EXISTS tierlists (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL COLLATE NOCASE, description TEXT, upvotes INTEGER DEFAULT 0, is_public BOOLEAN, last_update DATE, creator_name TEXT)")
+    c.execute("CREATE TABLE IF NOT EXISTS tierlists (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL COLLATE NOCASE, description TEXT, upvotes INTEGER DEFAULT 0, last_update DATE, creator_name TEXT)")
     c.execute("CREATE TABLE IF NOT EXISTS tiers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL COLLATE NOCASE, tierlist_id INTEGER, FOREIGN KEY (tierlist_id) REFERENCES tierlists(id) ON DELETE CASCADE)")
     c.execute("CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL COLLATE NOCASE, image TEXT, position INTEGER, tier_id INTEGER, FOREIGN KEY (tier_id) REFERENCES tiers(id) ON DELETE CASCADE)")
     c.execute("CREATE TABLE IF NOT EXISTS votes (name TEXT, tierlist_id INTEGER, value INTEGER DEFAULT 0, FOREIGN KEY (tierlist_id) REFERENCES tierlists(id) ON DELETE CASCADE, UNIQUE(name, tierlist_id))")
@@ -90,7 +90,6 @@ def convert_to_list(tierlists):
             "title": tierlist["title"],
             "description": tierlist["description"],
             "upvotes": tierlist["upvotes"],
-            "is_public": tierlist["is_public"],
             "last_update": tierlist["last_update"],
             "creator_name": tierlist["creator_name"],
             "tiers": tlist
@@ -153,3 +152,33 @@ def upvote_tierlist(name, tierlist_id, value):
     conn.commit()
     conn.close()
     return newvalue
+
+# create tier list we'll pass the name, title, desc, and tiers dictionary
+def create_tierlist(creator_name, title, description, tiers_dict):
+    conn = get_db_connection()
+    c = conn.cursor()
+
+    c.execute(
+        "INSERT INTO tierlists (title, description, upvotes, last_update, creator_name) VALUES (?, ?, 0, ?, DATE('now'), ?)",
+        (title, description, creator_name)
+    )
+    tierlist_id = c.lastrowid
+
+    for tier_name in ["S", "A", "B", "C", "D", "F"]:
+        c.execute("INSERT INTO tiers (name, tierlist_id) VALUES (?, ?)", (tier_name, tierlist_id))
+        tier_id = c.lastrowid
+
+        tier_items = tiers_dict.get(tier_name, [])
+        for pos, it in enumerate(tier_items):
+            name = (it.get("name") or "").strip()
+            image = (it.get("image") or "").strip() or None
+            if not name:
+                name = "Item"
+            c.execute(
+                "INSERT INTO items (name, image, position, tier_id) VALUES (?, ?, ?, ?)",
+                (name, image, pos, tier_id)
+            )
+
+    conn.commit()
+    conn.close()
+    return tierlist_id

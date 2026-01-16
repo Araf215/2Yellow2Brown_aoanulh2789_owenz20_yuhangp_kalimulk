@@ -25,3 +25,9 @@ aoanulH -- 2026-01-14 22:53
 yuhangP -- 2026-01-15 19:29
 - Added js to use async fetch post requests to update upvotes without reloading
 - prepopulate db with populate_db.py
+
+aoanulH -- 2026-01-15  19:43
+- Updated editior.js and html to include saving and title
+-  updated init py  with a api endpoint so it can save the tierlist and pass it  to the javascript
+-  added create tierlist function in data.py that saves title, name, description, and the tierlist dictionary
+- fixed view.html with correct html  elements and it  displays the  tierlist  with its  uid. 

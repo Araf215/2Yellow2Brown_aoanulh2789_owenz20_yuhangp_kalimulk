@@ -1,8 +1,7 @@
 
 
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
-
-from data import check_acc, check_password, insert_acc, search_tierlist, get_best_tierlists, get_tierlist, get_user_info, get_user_tierlists, upvote_tierlist
+from data import check_acc, check_password, insert_acc, search_tierlist, get_best_tierlists, get_tierlist, get_user_info, get_user_tierlists, upvote_tierlist, create_tierlist
 
 app = Flask(__name__)
 app.secret_key = "secret"
@@ -118,6 +117,23 @@ def view():
 @app.route("/editor", methods=['GET', 'POST'])
 def editor():
     return render_template('editor.html')
+
+@app.post("/api/tierlists")
+def api_create_tierlist():
+    if "username" not in session:
+        return jsonify({"ok": False, "error": "not_logged_in"}), 401
+
+    payload = request.get_json(silent=True) or {}
+
+    title = (payload.get("title") or "").strip()
+    if not title:
+        return jsonify({"ok": False, "error": "missing_title"}), 400
+
+    description = (payload.get("description") or "").strip()
+    tiers = payload.get("tiers") or {}
+
+    new_id = create_tierlist(session["username"], title, description, tiers)
+    return jsonify({"ok": True, "id": new_id, "redirect": url_for("view", id=new_id)})
 
 @app.route("/error", methods=['GET', 'POST'])
 def error():
