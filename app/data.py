@@ -100,7 +100,7 @@ def convert_to_list(tierlists):
 # for search bar to get tierlists with matching titles
 def search_tierlist(title):
     conn = get_db_connection()
-    tierlists = conn.execute("SELECT * FROM tierlists WHERE title = ?", (title,)).fetchall()
+    tierlists = conn.execute("SELECT * FROM tierlists WHERE title LIKE ?", ("%" + title + "%",)).fetchall()
     conn.close()
     return convert_to_list(tierlists)
 
@@ -159,7 +159,7 @@ def create_tierlist(creator_name, title, description, tiers_dict):
     c = conn.cursor()
 
     c.execute(
-        "INSERT INTO tierlists (title, description, upvotes, last_update, creator_name) VALUES (?, ?, 0, ?, DATE('now'), ?)",
+        "INSERT INTO tierlists (title, description, upvotes, last_update, creator_name) VALUES (?, ?, 0, DATE('now'), ?)",
         (title, description, creator_name)
     )
     tierlist_id = c.lastrowid
