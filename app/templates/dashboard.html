@@ -23,10 +23,10 @@
                     href="{{ url_for('profile', username=tierlist.creator_name) }}"
                     style="color: var(--primary-color); text-decoration: none;">{{ tierlist.creator_name }}</a></p>
             <p style="margin-top: 1rem;">{{ tierlist.description }}</p>
-            <div>
-                <button>▲</button>
-                <span>{{ tierlist.upvotes }}</span>
-                <button>▼</button>
+            <div class="voting" data-tierlistid="{{ tierlist.id }}">
+                <button class="upvote">▲</button>
+                <span class="votecount">{{ tierlist.upvotes }}</span>
+                <button class="downvote">▼</button>
             </div>
             <a href="{{ url_for('view', id=tierlist.id) }}"
                 style="color: var(--primary-color); display: inline-block; margin-top: 1rem;">View Tier List &rarr;</a>

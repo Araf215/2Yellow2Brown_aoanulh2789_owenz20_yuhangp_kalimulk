@@ -121,11 +121,9 @@ def get_tierlist(id):
 
 def upvote_tierlist(name, tierlist_id, value):
     conn = get_db_connection()
-    tierlist = conn.execute("SELECT * FROM tierlists where id = ?", (tierlist_id,)).fetchone()
-    if value == 1:
-        conn.execute("UPDATE tierlist SET upvotes = ?", (tierlist[3] + 1))
-    else:
-        conn.execute("UPDATE tierlist SET upvotes = ?", (tierlist[3] - 1))
+    tierlist = conn.execute("SELECT * FROM tierlists where id = ?", (tierlist_id,)).fetchone()[0]
+    conn.execute("UPDATE tierlist SET upvotes = ?", (tierlist[3] + value))
     conn.execute("INSERT INTO votes (name, tierlist_id, value) VALUES (?, ?, ?)", (name, tierlist_id, value))
     conn.commit()
     conn.close()
+    return tierlist[3] + value

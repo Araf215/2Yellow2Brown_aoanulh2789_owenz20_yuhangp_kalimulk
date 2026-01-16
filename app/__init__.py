@@ -1,8 +1,8 @@
 
 
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 
-from data import check_acc, check_password, insert_acc, search_tierlist, get_best_tierlists, get_tierlist, get_user_info, get_user_tierlists
+from data import check_acc, check_password, insert_acc, search_tierlist, get_best_tierlists, get_tierlist, get_user_info, get_user_tierlists, upvote_tierlist
 
 app = Flask(__name__)
 app.secret_key = "secret"
@@ -69,6 +69,11 @@ def login():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
+    if request.is_json:
+        data = request.get_json()
+        upvotes = upvote_tierlist(session['username'], data['tierlist_id'], data['value'])
+        return jsonify({"upvotes": upvotes})
+
     search = request.args.get("searchbar")
     if search:
         search = search.strip().lower()
