@@ -10,6 +10,10 @@ owenZ -- 2026-01-13 02:30
 aoanulH -- 2026-01-13 11:28
 - Revised Design Doc & Uploaded
 
+kalimulK -- 2026-01-13 11:47
+- researched how bootstrap cards work 
+- wrote test code for proof of concept
+
 yuhangP -- 2026-01-13 19:49
 - working search bar, only on submit not live search
 - add gitignore
@@ -24,11 +28,19 @@ yuhangP -- 2026-01-14 22:01
 
 aoanulH -- 2026-01-14 22:53
 - Restructured editor.html (moved javascript into a seperate js file in static)
-- Added comments to  both editor.html and editor.js for devo readability.  
+- Added comments to  both editor.html and editor.js for devo readability.
 
 owenZ -- 2026-01-15 1:23
 - Made profile page with username and account time created
-- Profile has the tierlists that only user has created  
+- Profile has the tierlists that only user has created
+
+kalimulK -- 2026-01-15 4:00
+- added cards for tiers to editor.html
+- added styling for tierlist
+
+kalimulK -- 2026-01-15 5:30
+- added dropdowns to all tierlist items to choose a rank
+- move tier to the chosen rank on page
 
 yuhangP -- 2026-01-15 19:29
 - Added js to use async fetch post requests to update upvotes without reloading
@@ -42,3 +54,8 @@ aoanulH -- 2026-01-15  19:43
 
 owenZ -- 2026-01-16 12:56
 - Added descriptions to tierlists based on the form and backend already existing
+
+kalimulK -- 2026-01-16 1:30
+- allow user to access the editor.html page for tierlists they created
+- delete existing tier data and republish all data after saving changes
+- update devlog for devo kk
