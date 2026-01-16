@@ -1,7 +1,5 @@
-
-
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
-from data import check_acc, check_password, insert_acc, search_tierlist, get_best_tierlists, get_tierlist, get_user_info, get_user_tierlists, upvote_tierlist, create_tierlist
+from data import check_acc, check_password, insert_acc, search_tierlist, get_best_tierlists, get_tierlist, get_user_info, get_user_tierlists, upvote_tierlist, create_tierlist, update_tierlist
 
 app = Flask(__name__)
 app.secret_key = "secret"
@@ -116,7 +114,18 @@ def view():
 
 @app.route("/editor", methods=['GET', 'POST'])
 def editor():
-    return render_template('editor.html')
+    tierlist_id = request.args.get('id')
+    tierlist_data = None
+    
+    if tierlist_id:
+        tierlist = get_tierlist(tierlist_id)
+        
+        if not tierlist or tierlist.get('creator_name') != session.get('username'):
+            return render_template('error.html', message="You don't have permission to edit this tier list")
+        
+        tierlist_data = tierlist
+    
+    return render_template('editor.html', tierlist=tierlist_data)
 
 @app.post("/api/tierlists")
 def api_create_tierlist():
@@ -134,6 +143,29 @@ def api_create_tierlist():
 
     new_id = create_tierlist(session["username"], title, description, tiers)
     return jsonify({"ok": True, "id": new_id, "redirect": url_for("view", id=new_id)})
+
+@app.route("/api/tierlists/<int:tierlist_id>", methods=["PUT"])
+def api_update_tierlist(tierlist_id):
+    if "username" not in session:
+        return jsonify({"ok": False, "error": "not_logged_in"}), 401
+
+    payload = request.get_json(silent=True) or {}
+
+    title = (payload.get("title") or "").strip()
+    if not title:
+        return jsonify({"ok": False, "error": "missing_title"}), 400
+
+    description = (payload.get("description") or "").strip()
+    tiers = payload.get("tiers") or {}
+    tier_config = payload.get("tierConfig") or []
+
+    # update tier list
+    success = update_tierlist(tierlist_id, session["username"], title, description, tiers, tier_config)
+    
+    if not success:
+        return jsonify({"ok": False, "error": "update_failed"}), 400
+
+    return jsonify({"ok": True, "id": tierlist_id, "redirect": url_for("view", id=tierlist_id)})
 
 @app.route("/error", methods=['GET', 'POST'])
 def error():

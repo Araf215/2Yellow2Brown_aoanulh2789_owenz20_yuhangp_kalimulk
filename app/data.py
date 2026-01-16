@@ -182,3 +182,42 @@ def create_tierlist(creator_name, title, description, tiers_dict):
     conn.commit()
     conn.close()
     return tierlist_id
+
+# update existing tier list
+def update_tierlist(tierlist_id, creator_name, title, description, tiers_dict, tier_config=None):
+    conn = get_db_connection()
+    c = conn.cursor()
+
+    # verify creator
+    existing = c.execute("SELECT creator_name FROM tierlists WHERE id = ?", (tierlist_id,)).fetchone()
+    if not existing or existing['creator_name'] != creator_name:
+        conn.close()
+        return False
+
+    c.execute(
+        "UPDATE tierlists SET title = ?, description = ?, last_update = DATE('now') WHERE id = ?",
+        (title, description, tierlist_id)
+    )
+
+    # delete existing tierlist data to prepare rewrite to db
+    c.execute("DELETE FROM tiers WHERE tierlist_id = ?", (tierlist_id,))
+
+    # rewrite
+    for tier_name in ["S", "A", "B", "C", "D", "F"]:
+        c.execute("INSERT INTO tiers (name, tierlist_id) VALUES (?, ?)", (tier_name, tierlist_id))
+        tier_id = c.lastrowid
+
+        tier_items = tiers_dict.get(tier_name, [])
+        for pos, it in enumerate(tier_items):
+            name = (it.get("name") or "").strip()
+            image = (it.get("image") or "").strip() or None
+            if not name:
+                name = "Item"
+            c.execute(
+                "INSERT INTO items (name, image, position, tier_id) VALUES (?, ?, ?, ?)",
+                (name, image, pos, tier_id)
+            )
+
+    conn.commit()
+    conn.close()
+    return True

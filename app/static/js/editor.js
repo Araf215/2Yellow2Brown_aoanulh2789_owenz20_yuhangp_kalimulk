@@ -143,13 +143,21 @@ document.addEventListener("DOMContentLoaded", () => {
   async function saveTierList() {
     clearError();
 
-    const titleInput = window.prompt("Tier list title:");
-    if (titleInput === null) return;
-
-    const title = titleInput.trim();
-    if (!title) {
-      showError("Tier list title is required.");
-      return;
+    let title;
+    if (window.editingTierListId) {
+      // Editing existing - use existing title or ask for confirmation
+      title = window.existingTierListTitle || "";
+      const confirmed = window.confirm(`Update "${title}"?`);
+      if (!confirmed) return;
+    } else {
+      // Creating new
+      const titleInput = window.prompt("Tier list title:");
+      if (titleInput === null) return;
+      title = titleInput.trim();
+      if (!title) {
+        showError("Tier list title is required.");
+        return;
+      }
     }
 
     const tiers = { S: [], A: [], B: [], C: [], D: [], F: [] };
@@ -167,15 +175,29 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // DEBUG: Log what we're sending
+    console.log("Sending data:", {
+      title,
+      description: window.existingTierListDescription || "",
+      tiers,
+      editingId: window.editingTierListId
+    });
+
     if (saveTierBtn) saveTierBtn.disabled = true;
 
     try {
-      const res = await fetch("/api/tierlists", {
-        method: "POST",
+      const url = window.editingTierListId 
+        ? `/api/tierlists/${window.editingTierListId}`
+        : "/api/tierlists";
+      
+      const method = window.editingTierListId ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method: method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
-          description: "",
+          description: window.existingTierListDescription || "",
           tiers
         })
       });
@@ -187,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      window.location.href = data.redirect || `/view/${data.id}`;
+      window.location.href = data.redirect || `/view?id=${data.id}`;
     } catch (e) {
       showError("Save failed.");
     } finally {
@@ -221,4 +243,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initial draw so emptyState + count are correct on page load
   render();
+
+  // Load existing tier list if editing
+  (function loadExistingTierList() {
+    // Get tier list data from template (injected by Flask)
+    const tierlistDataElement = document.getElementById("tierlist-data");
+    if (!tierlistDataElement) return;
+
+    const tierlistData = JSON.parse(tierlistDataElement.textContent);
+    if (!tierlistData || !tierlistData.tiers) return;
+
+    // Store editing info
+    window.editingTierListId = tierlistData.id;
+    window.existingTierListTitle = tierlistData.title;
+    window.existingTierListDescription = tierlistData.description || "";
+
+    // Convert tier list data to items array
+    for (const tier of tierlistData.tiers) {
+      const tierName = tier.name || tier['name'];
+      const tierItems = tier.items || tier['items'] || [];
+      
+      for (const item of tierItems) {
+        items.push({
+          id: safeId(),
+          text: item.name || item['name'],
+          img: item.image || item['image'] || "",
+          tier: tierName
+        });
+      }
+    }
+
+    render();
+  })();
 });

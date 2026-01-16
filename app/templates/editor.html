@@ -139,6 +139,12 @@
   </div>
 </div>
 
+{% if tierlist %}
+<script id="tierlist-data" type="application/json">
+{{ tierlist | tojson | safe }}
+</script>
+{% endif %}
+
 <script defer src="{{ url_for('static', filename='js/editor.js') }}"></script>
 
 {% endblock %}
