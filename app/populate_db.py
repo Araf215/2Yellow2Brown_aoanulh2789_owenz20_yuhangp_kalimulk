@@ -7,7 +7,7 @@ def create_users():
         ('yuhang', '1'),
         ('owen', '1'),
         ('araf', '1'),
-        ('kalimal', '1')
+        ('kalimul', '1')
     ]
     for username, password in users:
         conn.execute("INSERT OR IGNORE INTO users (name, password, created_at) VALUES (?, ?, CURRENT_TIMESTAMP)", (username, password))
