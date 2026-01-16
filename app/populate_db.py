@@ -21,24 +21,21 @@ def create_tierlists():
             "title": "Best Programming Languages",
             "description": "Rank the programming languages by coolness",
             "creator": "my goat",
-            "is_public": True,
             "upvotes": 67
         },
         {
             "title": "Best Anime Openings",
             "description": "Pure vibes",
             "creator": "my goat",
-            "is_public": True,
             "upvotes": 41
         }
     ]
     ids = []
     for t in tierlists:
-        cur = conn.execute("INSERT INTO tierlists (title, description, upvotes, is_public, last_update, creator_name) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, ?)", (
+        cur = conn.execute("INSERT INTO tierlists (title, description, upvotes, last_update, creator_name) VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?)", (
             t["title"],
             t["description"],
             t["upvotes"],
-            t["is_public"],
             t["creator"]
         ))
         ids.append(cur.lastrowid)
