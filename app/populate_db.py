@@ -28,6 +28,60 @@ def create_tierlists():
             "description": "Pure vibes",
             "creator": "my goat",
             "upvotes": 41
+        },
+        {
+            "title": "Best Anime Openings 2",
+            "description": "Pure vibes",
+            "creator": "my goat",
+            "upvotes": 77
+        },
+        {
+            "title": "Best Anime Openings 3",
+            "description": "Pure vibes",
+            "creator": "yuhang",
+            "upvotes": 66
+        },
+        {
+            "title": "Best Anime Openings 4",
+            "description": "Pure vibes",
+            "creator": "araf",
+            "upvotes": 55
+        },
+        {
+            "title": "Best Anime Openings 5",
+            "description": "Pure vibes",
+            "creator": "owen",
+            "upvotes": 44
+        },
+        {
+            "title": "Best Anime Openings 6",
+            "description": "Pure vibes",
+            "creator": "kalimul",
+            "upvotes": 33
+        },
+        {
+            "title": "Best Anime Openings 7",
+            "description": "Pure vibes",
+            "creator": "my goat",
+            "upvotes": 22
+        },
+        {
+            "title": "Best Anime Openings 8",
+            "description": "Pure vibes",
+            "creator": "my goat",
+            "upvotes": 11
+        },
+        {
+            "title": "Best Anime Openings 9",
+            "description": "Pure vibes",
+            "creator": "my goat",
+            "upvotes": 7
+        },
+        {
+            "title": "Best Anime Openings 10",
+            "description": "Pure vibes",
+            "creator": "my goat",
+            "upvotes": 6
         }
     ]
     ids = []
@@ -79,6 +133,60 @@ def populate_tables():
 
     # Anime OP Tierlist
     anime_tiers = create_tiers(tierlist_ids[1])
+    create_items(anime_tiers[0], ["Gurenge", "Kick Back", "Iris Out"])
+    create_items(anime_tiers[1], ["Unravel"])
+    create_items(anime_tiers[2], ["Blue Bird"])
+    create_items(anime_tiers[5], ["None"])
+
+    anime_tiers = create_tiers(tierlist_ids[2])
+    create_items(anime_tiers[0], ["Gurenge", "Kick Back", "Iris Out"])
+    create_items(anime_tiers[1], ["Unravel"])
+    create_items(anime_tiers[2], ["Blue Bird"])
+    create_items(anime_tiers[5], ["None"])
+
+    anime_tiers = create_tiers(tierlist_ids[3])
+    create_items(anime_tiers[0], ["Gurenge", "Kick Back", "Iris Out"])
+    create_items(anime_tiers[1], ["Unravel"])
+    create_items(anime_tiers[2], ["Blue Bird"])
+    create_items(anime_tiers[5], ["None"])
+
+    anime_tiers = create_tiers(tierlist_ids[4])
+    create_items(anime_tiers[0], ["Gurenge", "Kick Back", "Iris Out"])
+    create_items(anime_tiers[1], ["Unravel"])
+    create_items(anime_tiers[2], ["Blue Bird"])
+    create_items(anime_tiers[5], ["None"])
+
+    anime_tiers = create_tiers(tierlist_ids[5])
+    create_items(anime_tiers[0], ["Gurenge", "Kick Back", "Iris Out"])
+    create_items(anime_tiers[1], ["Unravel"])
+    create_items(anime_tiers[2], ["Blue Bird"])
+    create_items(anime_tiers[5], ["None"])
+
+    anime_tiers = create_tiers(tierlist_ids[6])
+    create_items(anime_tiers[0], ["Gurenge", "Kick Back", "Iris Out"])
+    create_items(anime_tiers[1], ["Unravel"])
+    create_items(anime_tiers[2], ["Blue Bird"])
+    create_items(anime_tiers[5], ["None"])
+
+    anime_tiers = create_tiers(tierlist_ids[7])
+    create_items(anime_tiers[0], ["Gurenge", "Kick Back", "Iris Out"])
+    create_items(anime_tiers[1], ["Unravel"])
+    create_items(anime_tiers[2], ["Blue Bird"])
+    create_items(anime_tiers[5], ["None"])
+
+    anime_tiers = create_tiers(tierlist_ids[8])
+    create_items(anime_tiers[0], ["Gurenge", "Kick Back", "Iris Out"])
+    create_items(anime_tiers[1], ["Unravel"])
+    create_items(anime_tiers[2], ["Blue Bird"])
+    create_items(anime_tiers[5], ["None"])
+
+    anime_tiers = create_tiers(tierlist_ids[9])
+    create_items(anime_tiers[0], ["Gurenge", "Kick Back", "Iris Out"])
+    create_items(anime_tiers[1], ["Unravel"])
+    create_items(anime_tiers[2], ["Blue Bird"])
+    create_items(anime_tiers[5], ["None"])
+
+    anime_tiers = create_tiers(tierlist_ids[10])
     create_items(anime_tiers[0], ["Gurenge", "Kick Back", "Iris Out"])
     create_items(anime_tiers[1], ["Unravel"])
     create_items(anime_tiers[2], ["Blue Bird"])
