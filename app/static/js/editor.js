@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Inline error message container
   const errMsg = document.getElementById("errMsg");
 
+  const saveTierBtn = document.getElementById("saveTierBtn");
+
   // Each item is an object: { id, text, img }
   let items = [];
 
@@ -138,6 +140,61 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   }
 
+  async function saveTierList() {
+    clearError();
+
+    const titleInput = window.prompt("Tier list title:");
+    if (titleInput === null) return;
+
+    const title = titleInput.trim();
+    if (!title) {
+      showError("Tier list title is required.");
+      return;
+    }
+
+    const tiers = { S: [], A: [], B: [], C: [], D: [], F: [] };
+    for (const it of items) {
+      if (it.tier === "unranked") continue;
+      if (!tiers[it.tier]) tiers[it.tier] = [];
+      tiers[it.tier].push({ name: it.text, image: it.img });
+    }
+
+    let rankedCount = 0;
+    for (const k in tiers) rankedCount += tiers[k].length;
+
+    if (rankedCount === 0) {
+      showError("Add at least one item to a tier before saving.");
+      return;
+    }
+
+    if (saveTierBtn) saveTierBtn.disabled = true;
+
+    try {
+      const res = await fetch("/api/tierlists", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          description: "",
+          tiers
+        })
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.ok) {
+        showError(data.error || "Save failed.");
+        return;
+      }
+
+      window.location.href = data.redirect || `/view/${data.id}`;
+    } catch (e) {
+      showError("Save failed.");
+    } finally {
+      if (saveTierBtn) saveTierBtn.disabled = false;
+    }
+  }
+
   //Event listeners
 
   addItemBtn.addEventListener("click", addItem);
@@ -148,6 +205,10 @@ document.addEventListener("DOMContentLoaded", () => {
     clearError();
     itemText.focus();
   });
+
+  if (saveTierBtn) {
+    saveTierBtn.addEventListener("click", saveTierList);
+  }
 
   // Pressing Enter in either input also adds the item
   itemText.addEventListener("keydown", (e) => {
