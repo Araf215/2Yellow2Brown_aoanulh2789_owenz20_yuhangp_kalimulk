@@ -13,7 +13,7 @@
         <input type="text" name="searchbar" placeholder="Search for tierlist..."
             value="{{ request.args.get('searchbar', '') }}"">
     </form>
-
+    <br>
     {% if tierlists %}
     <div class=" tierlist-grid">
         {% for tierlist in tierlists %}
