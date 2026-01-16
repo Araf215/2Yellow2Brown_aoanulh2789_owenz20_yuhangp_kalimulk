@@ -69,9 +69,12 @@ def login():
 
 @app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
+    # gets json request
     if request.is_json:
+        # data contains the tierlist id and value of 1 or -1 depending on if user is tryna upvote or downvote
         data = request.get_json()
         upvotes = upvote_tierlist(session['username'], data['tierlist_id'], data['value'])
+        # return new # of upvotes to the fetch response call
         return jsonify({"upvotes": upvotes})
 
     search = request.args.get("searchbar")

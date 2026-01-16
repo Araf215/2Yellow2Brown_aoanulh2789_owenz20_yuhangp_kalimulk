@@ -4,11 +4,13 @@ import os
 ABS_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(ABS_PATH, "data.db")
 
+# conncects to db
 def get_db_connection():
     conn = sqlite3.connect(DB_FILE)
     conn.row_factory = sqlite3.Row
     return conn
 
+# creates all the tables
 def init_db():
     conn = get_db_connection()
     c = conn.cursor()
@@ -29,18 +31,21 @@ def init_db():
 
 init_db()
 
+# get user for auth
 def check_acc(username):
     conn = get_db_connection()
     user = conn.execute("SELECT 1 FROM users WHERE name = ?", (username,)).fetchone()
     conn.close()
     return user
 
+# get passwrod for auth
 def check_password(username):
     conn = get_db_connection()
     user = conn.execute("SELECT password FROM users WHERE name = ?", (username,)).fetchone()
     conn.close()
     return user
 
+# add signed in acc to db
 def insert_acc(username, password):
     conn = get_db_connection()
     conn.execute("INSERT INTO users (name, password, created_at) VALUES (?, ?, CURRENT_TIMESTAMP)", (username, password))
@@ -53,12 +58,14 @@ def get_user_info(username):
     conn.close()
     return user
 
+# get user's tierlist, as the function name states
 def get_user_tierlists(username):
     conn = get_db_connection()
     tierlists = conn.execute("SELECT * FROM tierlists WHERE creator_name = ? ORDER BY last_update DESC", (username,)).fetchall()
     conn.close()
     return convert_to_list(tierlists)
 
+# convert tierlists into lists and dictionaries so they are easier to work with in jinja
 def convert_to_list(tierlists):
     conn = get_db_connection()
     result = []
@@ -91,24 +98,28 @@ def convert_to_list(tierlists):
     conn.close()
     return result
 
+# for search bar to get tierlists with matching titles
 def search_tierlist(title):
     conn = get_db_connection()
     tierlists = conn.execute("SELECT * FROM tierlists WHERE title = ?", (title,)).fetchall()
     conn.close()
     return convert_to_list(tierlists)
 
+# get the most recent tierlists
 def get_recent_tierlists():
     conn = get_db_connection()
     tierlists = conn.execute("SELECT * FROM tierlists ORDER BY last_update DESC LIMIT 10").fetchall()
     conn.close()
     return convert_to_list(tierlists)
 
+# get the tierlists with the most upvotes
 def get_best_tierlists():
     conn = get_db_connection()
     tierlists = conn.execute("SELECT * FROM tierlists ORDER BY upvotes DESC LIMIT 10").fetchall()
     conn.close()
     return convert_to_list(tierlists)
 
+# get tierlist by id
 def get_tierlist(id):
     conn = get_db_connection()
     tierlist = conn.execute("SELECT * FROM tierlists WHERE id = ?", (id,)).fetchone()
@@ -119,11 +130,12 @@ def get_tierlist(id):
     conn.close()
     return convert_to_list([tierlist])[0]
 
+# get the # of upvotes in tierlist the user is tryna upvote, update the upvote count, and return the new number of upvotes to be displayed
 def upvote_tierlist(name, tierlist_id, value):
     conn = get_db_connection()
-    tierlist = conn.execute("SELECT * FROM tierlists where id = ?", (tierlist_id,)).fetchone()[0]
-    conn.execute("UPDATE tierlist SET upvotes = ?", (tierlist[3] + value))
+    upvotes = conn.execute("SELECT upvotes FROM tierlists where id = ?", (tierlist_id,)).fetchone()[0]
+    conn.execute("UPDATE tierlist SET upvotes = ?", (upvotes + value))
     conn.execute("INSERT INTO votes (name, tierlist_id, value) VALUES (?, ?, ?)", (name, tierlist_id, value))
     conn.commit()
     conn.close()
-    return tierlist[3] + value
+    return upvotes + value
